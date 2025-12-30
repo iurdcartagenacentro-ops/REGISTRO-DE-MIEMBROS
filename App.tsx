@@ -20,7 +20,8 @@ import {
   Calendar, 
   Clock, 
   Printer,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Loader2
 } from 'lucide-react';
 
 // URL del logo oficial (Corazón con paloma)
@@ -33,6 +34,7 @@ const App: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<Member | undefined>(undefined);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -85,6 +87,15 @@ const App: React.FC = () => {
       storageService.deleteMember(id);
       setMembers(storageService.getMembers());
       if (selectedMember?.id === id) setSelectedMember(null);
+    }
+  };
+
+  const handleExportJPG = async (member: Member) => {
+    setIsExporting(true);
+    try {
+      await exportService.downloadMemberAsJPG(member);
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -184,14 +195,15 @@ const App: React.FC = () => {
                       <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Exportación para Impresión</p>
                       <div className="flex gap-4">
                         <button 
-                          disabled={!selectedMember}
-                          onClick={() => selectedMember && exportService.downloadMemberAsJPG(selectedMember)} 
+                          disabled={!selectedMember || isExporting}
+                          onClick={() => selectedMember && handleExportJPG(selectedMember)} 
                           className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all ${selectedMember ? 'bg-red-700 text-white hover:bg-red-800' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
                         >
-                          <ImageIcon size={18} /> {selectedMember ? `Descargar Ficha JPG (${selectedMember.firstName})` : 'Selecciona un miembro para descargar JPG'}
+                          {isExporting ? <Loader2 className="animate-spin" size={18} /> : <ImageIcon size={18} />}
+                          {selectedMember ? (isExporting ? 'Generando...' : `Descargar Ficha JPG (${selectedMember.firstName})`) : 'Selecciona un miembro para descargar JPG'}
                         </button>
                       </div>
-                      {!selectedMember && <p className="text-[10px] text-red-400 mt-2 font-bold italic">* Para descargar una ficha individual, selecciónala primero en la lista de miembros.</p>}
+                      {!selectedMember && <p className="text-[10px] text-red-400 mt-2 font-bold italic">* Para descargar una ficha individual, selecciónala primero en la sección de Registro de Miembros.</p>}
                     </div>
                   </div>
                 </div>
@@ -267,10 +279,12 @@ const App: React.FC = () => {
 
                           <div className="w-full flex flex-col gap-2 mt-8">
                             <button 
-                              onClick={() => exportService.downloadMemberAsJPG(selectedMember)}
-                              className="w-full flex items-center justify-center gap-2 py-4 bg-slate-900 text-white rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all shadow-xl active:scale-95"
+                              disabled={isExporting}
+                              onClick={() => handleExportJPG(selectedMember)}
+                              className="w-full flex items-center justify-center gap-2 py-4 bg-slate-900 text-white rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all shadow-xl active:scale-95 disabled:opacity-50"
                             >
-                              <ImageIcon size={16} /> Descargar Ficha JPG
+                              {isExporting ? <Loader2 className="animate-spin" size={16} /> : <ImageIcon size={16} />}
+                              {isExporting ? 'Procesando...' : 'Descargar Ficha JPG'}
                             </button>
                             <button className="w-full flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 text-slate-500 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-50 transition-all">
                               <Download size={16} /> Ficha PDF

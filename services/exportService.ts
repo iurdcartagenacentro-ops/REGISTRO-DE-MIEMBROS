@@ -6,7 +6,7 @@ const LOGO_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Univ
 export const exportService = {
   downloadMemberAsJPG: async (member: Member) => {
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
 
     // Tamaño A4 aproximado a 150 DPI para buena calidad de impresión
@@ -21,21 +21,28 @@ export const exportService = {
     ctx.fillStyle = '#b91c1c';
     ctx.fillRect(0, 0, canvas.width, 250);
 
-    // Cargar Logo
+    // Función robusta para cargar imágenes (maneja base64 y URLs externas)
     const loadImg = (url: string): Promise<HTMLImageElement> => {
       return new Promise((resolve, reject) => {
         const img = new Image();
-        img.crossOrigin = 'anonymous';
+        // Solo aplicar crossOrigin a URLs externas, no a strings base64 (data:)
+        if (url && !url.startsWith('data:')) {
+          img.crossOrigin = 'anonymous';
+        }
         img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error(`No se pudo cargar la imagen: ${url}`));
+        img.onerror = () => reject(new Error(`No se pudo cargar la imagen`));
         img.src = url;
       });
     };
 
     try {
-      // Dibujar Logo
-      const logo = await loadImg(LOGO_URL);
-      ctx.drawImage(logo, 60, 50, 150, 150);
+      // 1. Dibujar Logo
+      try {
+        const logo = await loadImg(LOGO_URL);
+        ctx.drawImage(logo, 60, 50, 150, 150);
+      } catch (e) {
+        console.warn("No se pudo cargar el logo externo, omitiendo...");
+      }
 
       // Texto Encabezado
       ctx.fillStyle = '#ffffff';
@@ -44,7 +51,7 @@ export const exportService = {
       ctx.font = '30px Inter, sans-serif';
       ctx.fillText('REGISTRO OFICIAL DE MIEMBROS', 245, 180);
 
-      // Marco de la Foto
+      // 2. Foto del Miembro
       ctx.strokeStyle = '#e2e8f0';
       ctx.lineWidth = 2;
       ctx.strokeRect(850, 300, 330, 330);
@@ -52,20 +59,31 @@ export const exportService = {
       if (member.imageUrl) {
         try {
           const profileImg = await loadImg(member.imageUrl);
-          ctx.drawImage(profileImg, 855, 305, 320, 320);
+          // Recortar imagen para que sea cuadrada y encaje en el marco
+          const size = Math.min(profileImg.width, profileImg.height);
+          const startX = (profileImg.width - size) / 2;
+          const startY = (profileImg.height - size) / 2;
+          ctx.drawImage(profileImg, startX, startY, size, size, 855, 305, 320, 320);
         } catch (e) {
           ctx.fillStyle = '#f1f5f9';
           ctx.fillRect(855, 305, 320, 320);
           ctx.fillStyle = '#94a3b8';
           ctx.font = '30px Inter, sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText('Sin Foto', 1015, 475);
+          ctx.fillText('Error al cargar foto', 1015, 475);
           ctx.textAlign = 'left';
         }
+      } else {
+        ctx.fillStyle = '#f1f5f9';
+        ctx.fillRect(855, 305, 320, 320);
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '30px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Sin Foto', 1015, 475);
+        ctx.textAlign = 'left';
       }
 
-      // Cuerpo de Datos
-      ctx.fillStyle = '#0f172a';
+      // 3. Cuerpo de Datos
       const drawField = (label: string, value: string, x: number, y: number) => {
         ctx.font = 'bold 22px Inter, sans-serif';
         ctx.fillStyle = '#64748b';
@@ -77,7 +95,7 @@ export const exportService = {
 
       let startY = 350;
       const col1 = 80;
-      const col2 = 450;
+      const col2 = 500; // Ajustado para dar más espacio
 
       drawField('Nombre Completo', `${member.firstName} ${member.lastName}`, col1, startY);
       drawField('Celular / Teléfono', member.phone, col1, startY + 150);
@@ -96,7 +114,7 @@ export const exportService = {
       drawField('Iglesia', member.churchName, col1, startY + 900);
       drawField('Tiempo de Permanencia', member.churchTime, col2, startY + 900);
 
-      // Firma
+      // 4. Firma
       ctx.fillStyle = '#f8fafc';
       ctx.fillRect(80, 1350, 1080, 250);
       ctx.strokeStyle = '#cbd5e1';
@@ -111,27 +129,28 @@ export const exportService = {
           const sigImg = await loadImg(member.signatureUrl);
           ctx.drawImage(sigImg, 100, 1400, 1000, 180);
         } catch (e) {
-          console.error("Error cargando firma");
+          console.error("Error al cargar la firma en el canvas");
         }
       }
 
-      // Pie de página
+      // 5. Pie de página
       ctx.fillStyle = '#b91c1c';
       ctx.fillRect(0, 1720, canvas.width, 34);
       ctx.font = 'italic 18px Inter, sans-serif';
       ctx.fillStyle = '#64748b';
       ctx.textAlign = 'center';
-      ctx.fillText(`Documento generado el ${new Date().toLocaleDateString()} - ID: ${member.id}`, canvas.width / 2, 1700);
+      ctx.fillText(`Documento generado oficialmente el ${new Date().toLocaleDateString()} - ID: ${member.id}`, canvas.width / 2, 1700);
 
-      // Descarga
+      // 6. Generar Descarga
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
       const link = document.createElement('a');
       link.download = `Ficha_${member.firstName}_${member.lastName}.jpg`;
-      link.href = canvas.toDataURL('image/jpeg', 0.9);
+      link.href = dataUrl;
       link.click();
 
     } catch (error) {
-      console.error("Error generando ficha:", error);
-      alert("Hubo un error al generar la imagen. Asegúrate de que las fotos tengan permisos adecuados.");
+      console.error("Error crítico generando ficha JPG:", error);
+      alert("Error al generar la ficha. Esto puede deberse a la configuración de seguridad del navegador con imágenes externas. Intente de nuevo o use una foto diferente.");
     }
   }
 };
