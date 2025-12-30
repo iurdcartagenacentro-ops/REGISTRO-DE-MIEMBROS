@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#b91c1c">
   
   <!-- Configuración PWA para iOS -->
@@ -23,7 +23,8 @@
       font-family: 'Inter', sans-serif;
       background-color: #ffffff;
       -webkit-tap-highlight-color: transparent;
-      user-select: none; /* Evita selección accidental en modo app */
+      margin: 0;
+      padding: 0;
     }
     
     /* Scrollbar estilizado */
@@ -56,14 +57,9 @@
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-      opacity: 0.5;
+      opacity: 0.05;
       pointer-events: none;
       z-index: 0;
-    }
-    .form-watermark::before {
-      opacity: 0.15;
-      width: 350px;
-      height: 350px;
     }
 
     /* Animaciones suaves */
@@ -75,9 +71,12 @@
       animation: fadeIn 0.4s ease-out forwards;
     }
     
-    /* Prevenir que se vea como web al arrastrar en iOS */
     html, body {
       overscroll-behavior-y: contain;
+      height: 100%;
+    }
+    #root {
+      height: 100%;
     }
   </style>
 <script type="importmap">
@@ -95,5 +94,7 @@
 </head>
 <body>
   <div id="root"></div>
+  <!-- Carga explícita del script principal -->
+  <script type="module" src="./index.tsx"></script>
 </body>
 </html>

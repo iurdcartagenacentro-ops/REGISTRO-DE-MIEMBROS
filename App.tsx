@@ -1,16 +1,15 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Member, ChurchGroup } from './types';
+import { Member } from './types';
 import { storageService } from './services/storageService';
-import { ICONS, COLORS } from './constants';
+import { ICONS } from './constants';
 import Dashboard from './components/Dashboard';
 import MemberForm from './components/MemberForm';
 import AISuggestions from './components/AISuggestions';
-// Import missing icons from lucide-react
+// Importaciones directas de lucide-react necesarias para el cuerpo de App
 import { 
   Download, 
   Upload, 
-  Trash2, 
   Database, 
   ShieldCheck, 
   Info, 
@@ -35,7 +34,11 @@ const App: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setMembers(storageService.getMembers());
+    try {
+      setMembers(storageService.getMembers());
+    } catch (e) {
+      console.error("Error cargando miembros:", e);
+    }
   }, []);
 
   const filteredMembers = useMemo(() => {
@@ -43,7 +46,7 @@ const App: React.FC = () => {
       `${m.firstName} ${m.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
       m.phone.includes(searchQuery) ||
       m.group.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      m.ciudad.toLowerCase().includes(searchQuery.toLowerCase())
+      (m.ciudad && m.ciudad.toLowerCase().includes(searchQuery.toLowerCase()))
     );
   }, [members, searchQuery]);
 
@@ -53,7 +56,8 @@ const App: React.FC = () => {
     } else {
       storageService.addMember(member);
     }
-    setMembers(storageService.getMembers());
+    const updated = storageService.getMembers();
+    setMembers(updated);
     setIsFormOpen(false);
     setEditingMember(undefined);
     if (selectedMember?.id === member.id) setSelectedMember(member);
@@ -113,7 +117,7 @@ const App: React.FC = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 bg-white relative">
+      <main className="flex-1 flex flex-col min-w-0 bg-white relative overflow-hidden">
         <header className="sticky top-0 bg-white/80 backdrop-blur-xl border-b border-slate-200 px-8 py-5 flex items-center justify-between z-30">
           <div className="flex-1 max-w-xl">
             <div className="relative group">
@@ -144,7 +148,7 @@ const App: React.FC = () => {
               <div className="max-w-2xl animate-fade-in space-y-8">
                 <div className="flex items-center gap-4 mb-2">
                    <div className="p-3 bg-red-50 text-red-700 rounded-2xl border border-red-100"><Database size={24} /></div>
-                   <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Configuración de la App</h2>
+                   <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Configuración</h2>
                 </div>
                 
                 <div className="grid grid-cols-1 gap-6">
@@ -172,12 +176,12 @@ const App: React.FC = () => {
 
                   <div className="bg-gray-50 p-8 rounded-[2rem] border border-slate-200 space-y-4">
                     <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                      <Info className="text-red-700" size={20} /> Información de la Aplicación
+                      <Info className="text-red-700" size={20} /> Información
                     </h3>
                     <div className="space-y-2 text-sm text-slate-600">
-                      <p className="flex justify-between border-b border-slate-200 pb-2"><span>Versión</span> <span className="font-bold">2.1.0-PRO</span></p>
-                      <p className="flex justify-between border-b border-slate-200 pb-2"><span>Estado del Motor</span> <span className="text-green-600 font-bold">Óptimo</span></p>
-                      <p className="flex justify-between"><span>Soporte IA (Gemini)</span> <span className="text-blue-600 font-bold">Activo</span></p>
+                      <p className="flex justify-between border-b border-slate-200 pb-2"><span>Versión</span> <span className="font-bold">2.1.1-PRO</span></p>
+                      <p className="flex justify-between border-b border-slate-200 pb-2"><span>Estado</span> <span className="text-green-600 font-bold">Óptimo</span></p>
+                      <p className="flex justify-between"><span>Soporte IA</span> <span className="text-blue-600 font-bold">Activo</span></p>
                     </div>
                   </div>
                 </div>
@@ -185,12 +189,12 @@ const App: React.FC = () => {
             )}
 
             {view === 'list' && (
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 animate-fade-in logo-watermark">
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 animate-fade-in">
                 <div className="xl:col-span-8 space-y-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Registro de Miembros</h2>
+                    <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Registro</h2>
                     <span className="px-4 py-2 bg-slate-100 text-slate-600 text-[10px] font-black rounded-xl border border-slate-200 uppercase tracking-widest">
-                      {filteredMembers.length} Miembros Encontrados
+                      {filteredMembers.length} Miembros
                     </span>
                   </div>
                   
@@ -200,7 +204,7 @@ const App: React.FC = () => {
                         <tr>
                           <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Miembro</th>
                           <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Grupo</th>
-                          <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Ubicación</th>
+                          <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Ciudad</th>
                           <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Acciones</th>
                         </tr>
                       </thead>
@@ -209,8 +213,8 @@ const App: React.FC = () => {
                           <tr key={member.id} onClick={() => setSelectedMember(member)} className={`group cursor-pointer hover:bg-red-50/30 transition-all ${selectedMember?.id === member.id ? 'bg-red-50/50 border-l-4 border-red-700' : ''}`}>
                             <td className="px-8 py-4">
                               <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center font-black text-red-700 overflow-hidden shadow-sm group-hover:scale-110 transition-transform">
-                                  {member.imageUrl ? <img src={member.imageUrl} className="w-full h-full object-cover" /> : member.firstName[0]}
+                                <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center font-black text-red-700 overflow-hidden shadow-sm">
+                                  {member.imageUrl ? <img src={member.imageUrl} className="w-full h-full object-cover" /> : (member.firstName ? member.firstName[0] : '?')}
                                 </div>
                                 <div>
                                   <p className="font-bold text-slate-900 text-sm">{member.firstName} {member.lastName}</p>
@@ -222,8 +226,7 @@ const App: React.FC = () => {
                               <span className="px-3 py-1.5 bg-white text-red-700 text-[10px] font-black rounded-xl border border-red-100 shadow-sm">{member.group}</span>
                             </td>
                             <td className="px-8 py-4">
-                               <p className="text-sm font-bold text-slate-700">{member.ciudad}</p>
-                               <p className="text-[10px] text-slate-400 font-bold uppercase">{member.barrio}</p>
+                               <p className="text-sm font-bold text-slate-700">{member.ciudad || '-'}</p>
                             </td>
                             <td className="px-8 py-4 text-right">
                               <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
@@ -237,9 +240,8 @@ const App: React.FC = () => {
                           <tr>
                             <td colSpan={4} className="py-20 text-center">
                               <div className="flex flex-col items-center justify-center text-slate-300">
-                                {/* Fixed missing Search icon usage */}
                                 <Search size={48} className="mb-4 opacity-20" />
-                                <p className="font-black uppercase text-[10px] tracking-widest">No se encontraron resultados</p>
+                                <p className="font-black uppercase text-[10px] tracking-widest">Sin resultados</p>
                               </div>
                             </td>
                           </tr>
@@ -266,28 +268,26 @@ const App: React.FC = () => {
                           </div>
                           
                           <div className="w-full space-y-5 text-left border-t border-slate-100 pt-8">
-                            {/* Fixed missing icons usage by adding imports and using correct names */}
                             <DetailRow icon={<Phone size={16} />} label="Celular" value={selectedMember.phone} />
                             <DetailRow icon={<User size={16} />} label="Estado Civil" value={selectedMember.maritalStatus} />
-                            <DetailRow icon={<MapPin size={16} />} label="Ubicación" value={`${selectedMember.ciudad}, ${selectedMember.barrio}`} />
+                            <DetailRow icon={<MapPin size={16} />} label="Ubicación" value={`${selectedMember.ciudad || ''} ${selectedMember.barrio || ''}`} />
                             <DetailRow icon={<Calendar size={16} />} label="Bautismo" value={selectedMember.baptismDate || 'No bautizado'} />
                             <DetailRow icon={<Clock size={16} />} label="Tiempo Iglesia" value={selectedMember.churchTime} />
                           </div>
 
                           {selectedMember.signatureUrl && (
-                            <div className="w-full mt-6 pt-6 border-t border-slate-100">
-                               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 text-center">Firma Electrónica</p>
-                               <img src={selectedMember.signatureUrl} className="w-full h-24 object-contain bg-slate-50 rounded-[2rem] border border-slate-200 p-4" />
+                            <div className="w-full mt-6 pt-6 border-t border-slate-100 text-center">
+                               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Firma Electrónica</p>
+                               <img src={selectedMember.signatureUrl} className="w-full h-24 object-contain bg-slate-50 rounded-[2rem] border border-slate-200 p-4 mx-auto" />
                             </div>
                           )}
 
                           <div className="w-full flex gap-3 mt-8">
-                            <button onClick={() => {/* window.print() o similar */}} className="p-4 bg-gray-100 text-slate-600 rounded-2xl hover:bg-gray-200 transition-colors">
-                              {/* Fixed missing Printer icon */}
+                            <button className="p-4 bg-gray-100 text-slate-600 rounded-2xl hover:bg-gray-200 transition-colors">
                               <Printer size={20} />
                             </button>
-                            <button onClick={() => {/* downloadAsImage implementado arriba */}} className="flex-1 flex items-center justify-center gap-3 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all shadow-xl shadow-slate-200">
-                              <Download size={18} /> Descargar Ficha Digital
+                            <button className="flex-1 flex items-center justify-center gap-3 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all shadow-xl shadow-slate-200">
+                              <Download size={18} /> Ficha Digital
                             </button>
                           </div>
                         </div>
@@ -298,11 +298,10 @@ const App: React.FC = () => {
                   ) : (
                     <div className="bg-white p-12 rounded-[3rem] border-2 border-slate-100 border-dashed text-center flex flex-col items-center justify-center text-slate-300 min-h-[500px]">
                       <div className="w-24 h-24 bg-gray-50 border border-slate-200 rounded-full flex items-center justify-center mb-8 shadow-inner">
-                        {/* Fixed missing User icon usage */}
                         <User size={40} className="text-slate-200" />
                       </div>
                       <h4 className="font-black uppercase text-[12px] tracking-[0.3em] text-slate-400 px-6 leading-relaxed">
-                        Selecciona un miembro para visualizar su expediente completo
+                        Selecciona un miembro para visualizar su ficha
                       </h4>
                     </div>
                   )}

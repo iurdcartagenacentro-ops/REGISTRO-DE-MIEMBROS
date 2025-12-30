@@ -3,16 +3,21 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
+console.log("Iniciando Aplicación Universal...");
+
 const rootElement = document.getElementById('root');
 if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
+  throw new Error("No se pudo encontrar el elemento root para montar la aplicación");
 }
 
 // Registro de Service Worker para capacidades PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(err => {
-      console.log('Service Worker registration skipped or failed: ', err);
+    // Usamos ruta relativa ./sw.js para mayor compatibilidad
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      console.log('Service Worker registrado correctamente:', reg.scope);
+    }).catch(err => {
+      console.warn('Fallo el registro del Service Worker (esto es normal en algunos entornos de desarrollo):', err);
     });
   });
 }
