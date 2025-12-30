@@ -12,18 +12,16 @@ import {
   Upload, 
   Database, 
   ShieldCheck, 
-  Info, 
   Search, 
   Phone, 
   User, 
   MapPin, 
   Calendar, 
-  Clock, 
-  Printer,
   Image as ImageIcon,
   Loader2,
   Menu,
-  X
+  X,
+  Plus
 } from 'lucide-react';
 
 // URL del logo oficial (Corazón con paloma)
@@ -154,8 +152,9 @@ const App: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] lg:hidden animate-fade-in" onClick={() => setIsMobileMenuOpen(false)}>
           <div className="w-72 h-full bg-white p-6 shadow-2xl flex flex-col animate-in slide-in-from-left duration-300" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-end mb-4">
-              <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-slate-400 hover:text-red-700 transition-colors">
+            <div className="flex justify-between items-center mb-8">
+              <img src={LOGO_URL} className="w-10 h-10 object-contain" alt="Logo" />
+              <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-slate-400 hover:text-red-700 transition-colors border border-slate-100 rounded-xl">
                 <X size={24} />
               </button>
             </div>
@@ -171,21 +170,30 @@ const App: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 bg-white relative overflow-hidden">
+        {/* Floating Action Button for Mobile/Tablet */}
+        <button 
+          onClick={() => { setEditingMember(undefined); setIsFormOpen(true); }}
+          className="fixed bottom-6 right-6 w-16 h-16 bg-red-700 text-white rounded-full flex items-center justify-center shadow-2xl shadow-red-200 z-[40] lg:hidden active:scale-90 transition-transform"
+          aria-label="Nuevo Miembro"
+        >
+          <Plus size={32} />
+        </button>
+
         <header className="sticky top-0 bg-white/80 backdrop-blur-xl border-b border-slate-200 px-4 md:px-8 py-4 flex items-center justify-between z-30">
-          <div className="flex items-center gap-4 flex-1">
+          <div className="flex items-center gap-3 md:gap-4 flex-1">
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 -ml-2 text-slate-500 hover:text-red-700 lg:hidden transition-colors"
+              className="p-2.5 bg-gray-50 text-slate-500 hover:text-red-700 lg:hidden transition-colors rounded-xl border border-slate-200"
             >
               <Menu size={24} />
             </button>
             <div className="flex-1 max-w-xl">
               <div className="relative group">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">{ICONS.Search}</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-red-500 transition-colors">{ICONS.Search}</span>
                 <input 
                   type="text" 
                   placeholder="Buscar..." 
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-100/50 border border-transparent focus:bg-white focus:border-red-200 focus:ring-4 focus:ring-red-50 rounded-2xl outline-none transition-all font-medium text-sm" 
+                  className="w-full pl-11 pr-4 py-2.5 bg-gray-100/50 border border-transparent focus:bg-white focus:border-red-200 focus:ring-4 focus:ring-red-50 rounded-2xl outline-none transition-all font-medium text-sm" 
                   value={searchQuery} 
                   onChange={(e) => setSearchQuery(e.target.value)} 
                 />
@@ -194,10 +202,10 @@ const App: React.FC = () => {
           </div>
           <div className="flex items-center gap-2 md:gap-4 ml-4">
              <div className="hidden sm:block text-right">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Administrador</p>
-                <p className="text-xs font-bold text-slate-700">Universal App</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight">Admin</p>
+                <p className="text-xs font-bold text-slate-700 leading-tight">Universal App</p>
              </div>
-             <div className="w-10 h-10 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-red-700 font-black text-sm">A</div>
+             <div className="w-10 h-10 rounded-2xl bg-red-700 border border-red-800 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-red-100">U</div>
           </div>
         </header>
 
@@ -331,7 +339,7 @@ const App: React.FC = () => {
                       <AISuggestions member={selectedMember} />
                     </div>
                   ) : (
-                    <div className="bg-white p-12 rounded-[3rem] border-2 border-slate-100 border-dashed text-center flex flex-col items-center justify-center text-slate-300 min-h-[400px]">
+                    <div className="bg-white p-12 rounded-[3rem] border-2 border-slate-100 border-dashed text-center flex flex-col items-center justify-center text-slate-300 min-h-[400px] hidden md:flex">
                       <User size={40} className="mb-4" />
                       <p className="font-black uppercase text-[10px] tracking-widest">Selecciona un registro</p>
                     </div>
