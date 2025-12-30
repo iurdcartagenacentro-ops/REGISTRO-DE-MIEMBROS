@@ -12,27 +12,42 @@ import {
   Pie, 
   Cell 
 } from 'recharts';
-import { Member } from '../types';
+import { Member, ChurchGroup } from '../types';
 import { ICONS, COLORS } from '../constants';
 
 interface DashboardProps {
   members: Member[];
 }
 
+const GROUP_COLORS: Record<string, string> = {
+  [ChurchGroup.FTU]: '#f97316',    // Naranja
+  [ChurchGroup.FJU]: '#dc2626',    // Rojo
+  [ChurchGroup.CALEB]: '#7f1d1d',  // Vino / Borgoña
+  [ChurchGroup.EBI]: '#facc15',    // Amarillo
+  [ChurchGroup.EVG]: '#2563eb',    // Azul
+  [ChurchGroup.NONE]: '#9333ea',   // Morado
+};
+
 const Dashboard: React.FC<DashboardProps> = ({ members }) => {
   const stats = useMemo(() => {
     const total = members.length;
     const groupCounts: Record<string, number> = {};
+    
+    // Inicializar todos los grupos conocidos con 0 para que aparezcan en los gráficos aunque no tengan miembros
+    Object.values(ChurchGroup).forEach(group => {
+      groupCounts[group] = 0;
+    });
+
     members.forEach(m => {
       groupCounts[m.group] = (groupCounts[m.group] || 0) + 1;
     });
 
-    const groupData = Object.entries(groupCounts).map(([name, value]) => ({ name, value }));
+    const groupData = Object.entries(groupCounts)
+      .filter(([_, value]) => value >= 0) // Mantener todos para consistencia visual
+      .map(([name, value]) => ({ name, value }));
     
     return { total, groupData };
   }, [members]);
-
-  const PIE_COLORS = ['#b91c1c', '#dc2626', '#ef4444', '#f87171', '#fca5a5', '#fee2e2'];
 
   return (
     <div className="space-y-8">
@@ -49,26 +64,50 @@ const Dashboard: React.FC<DashboardProps> = ({ members }) => {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#cbd5e1" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
-                <Tooltip contentStyle={{ borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', backgroundColor: '#fff' }} />
-                <Bar dataKey="value" fill="#b91c1c" radius={[6, 6, 0, 0]} />
+                <Tooltip 
+                  cursor={{fill: '#f8fafc'}}
+                  contentStyle={{ borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', backgroundColor: '#fff' }} 
+                />
+                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                  {stats.groupData.map((entry, index) => (
+                    <Cell key={`cell-bar-${index}`} fill={GROUP_COLORS[entry.name] || '#cbd5e1'} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
-          <h3 className="text-lg font-black text-slate-900 mb-8 uppercase tracking-tight">DISTRIBUCION IGLESIA</h3>
+          <h3 className="text-lg font-black text-slate-900 mb-8 uppercase tracking-tight">DISTRIBUCIÓN IGLESIA</h3>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={stats.groupData} cx="50%" cy="50%" innerRadius={70} outerRadius={100} paddingAngle={8} dataKey="value" stroke="none">
-                  {stats.groupData.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                <Pie 
+                  data={stats.groupData.filter(d => d.value > 0)} 
+                  cx="50%" 
+                  cy="50%" 
+                  innerRadius={70} 
+                  outerRadius={100} 
+                  paddingAngle={8} 
+                  dataKey="value" 
+                  stroke="none"
+                >
+                  {stats.groupData.filter(d => d.value > 0).map((entry, index) => (
+                    <Cell key={`cell-pie-${index}`} fill={GROUP_COLORS[entry.name] || '#cbd5e1'} />
                   ))}
                 </Pie>
                 <Tooltip contentStyle={{ borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', backgroundColor: '#fff' }} />
               </PieChart>
             </ResponsiveContainer>
+          </div>
+          <div className="mt-4 flex flex-wrap justify-center gap-4">
+            {Object.entries(GROUP_COLORS).map(([group, color]) => (
+              <div key={group} className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }}></div>
+                <span className="text-[10px] font-bold text-slate-500 uppercase">{group}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
