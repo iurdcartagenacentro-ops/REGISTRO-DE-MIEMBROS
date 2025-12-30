@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Universal - Registro de Miembros",
+  "description": "Sistema oficial de registro y gestión de miembros para la Iglesia Universal. Incluye ficha digital, firma y respaldo de datos.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
