@@ -1,0 +1,21 @@
+
+{
+  "short_name": "Universal",
+  "name": "Universal - Registro de Miembros",
+  "icons": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Universal_Church_of_the_Kingdom_of_God_Logo.svg/192px-Universal_Church_of_the_Kingdom_of_God_Logo.svg.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Universal_Church_of_the_Kingdom_of_God_Logo.svg/512px-Universal_Church_of_the_Kingdom_of_God_Logo.svg.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#b91c1c",
+  "background_color": "#ffffff"
+}

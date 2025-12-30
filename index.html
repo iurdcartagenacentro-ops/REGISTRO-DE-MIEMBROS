@@ -5,8 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#b91c1c">
+  
+  <!-- Configuración PWA para iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Universal">
+  <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Universal_Church_of_the_Kingdom_of_God_Logo.svg/512px-Universal_Church_of_the_Kingdom_of_God_Logo.svg.png">
+  
+  <!-- Manifiesto de la aplicación -->
+  <link rel="manifest" href="manifest.json">
+  
   <title>UNIVERSAL - Registro de Miembros</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -15,6 +23,7 @@
       font-family: 'Inter', sans-serif;
       background-color: #ffffff;
       -webkit-tap-highlight-color: transparent;
+      user-select: none; /* Evita selección accidental en modo app */
     }
     
     /* Scrollbar estilizado */
@@ -64,6 +73,11 @@
     }
     .animate-fade-in {
       animation: fadeIn 0.4s ease-out forwards;
+    }
+    
+    /* Prevenir que se vea como web al arrastrar en iOS */
+    html, body {
+      overscroll-behavior-y: contain;
     }
   </style>
 <script type="importmap">
