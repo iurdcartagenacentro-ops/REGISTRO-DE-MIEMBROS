@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Member } from './types';
 import { storageService } from './services/storageService';
+import { exportService } from './services/exportService';
 import { ICONS } from './constants';
 import Dashboard from './components/Dashboard';
 import MemberForm from './components/MemberForm';
@@ -18,7 +19,8 @@ import {
   MapPin, 
   Calendar, 
   Clock, 
-  Printer 
+  Printer,
+  Image as ImageIcon
 } from 'lucide-react';
 
 // URL del logo oficial (Corazón con paloma)
@@ -168,7 +170,7 @@ const App: React.FC = () => {
                   <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                     <ShieldCheck className="text-green-600" size={20} /> Copias de Seguridad
                   </h3>
-                  <div className="flex flex-wrap gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <button onClick={() => storageService.exportData()} className="flex items-center gap-3 px-6 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all">
                       <Download size={18} /> Exportar JSON
                     </button>
@@ -176,6 +178,21 @@ const App: React.FC = () => {
                       <Upload size={18} /> Importar JSON
                     </button>
                     <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={handleImport} />
+                    
+                    {/* Nueva funcionalidad solicitada por el usuario */}
+                    <div className="sm:col-span-2 pt-4 mt-4 border-t border-slate-100">
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Exportación para Impresión</p>
+                      <div className="flex gap-4">
+                        <button 
+                          disabled={!selectedMember}
+                          onClick={() => selectedMember && exportService.downloadMemberAsJPG(selectedMember)} 
+                          className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all ${selectedMember ? 'bg-red-700 text-white hover:bg-red-800' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                        >
+                          <ImageIcon size={18} /> {selectedMember ? `Descargar Ficha JPG (${selectedMember.firstName})` : 'Selecciona un miembro para descargar JPG'}
+                        </button>
+                      </div>
+                      {!selectedMember && <p className="text-[10px] text-red-400 mt-2 font-bold italic">* Para descargar una ficha individual, selecciónala primero en la lista de miembros.</p>}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -248,8 +265,14 @@ const App: React.FC = () => {
                             <DetailRow icon={<Calendar size={14} />} label="Bautismo" value={selectedMember.baptismDate || 'No registra'} />
                           </div>
 
-                          <div className="w-full flex gap-2 mt-8">
-                            <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-900 text-white rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all">
+                          <div className="w-full flex flex-col gap-2 mt-8">
+                            <button 
+                              onClick={() => exportService.downloadMemberAsJPG(selectedMember)}
+                              className="w-full flex items-center justify-center gap-2 py-4 bg-slate-900 text-white rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all shadow-xl active:scale-95"
+                            >
+                              <ImageIcon size={16} /> Descargar Ficha JPG
+                            </button>
+                            <button className="w-full flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 text-slate-500 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-50 transition-all">
                               <Download size={16} /> Ficha PDF
                             </button>
                           </div>
