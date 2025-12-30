@@ -21,6 +21,7 @@ import {
   Printer 
 } from 'lucide-react';
 
+// URL del logo oficial (Corazón con paloma)
 const LOGO_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Universal_Church_of_the_Kingdom_of_God_Logo.svg/1024px-Universal_Church_of_the_Kingdom_of_God_Logo.svg.png';
 
 const App: React.FC = () => {
@@ -99,7 +100,7 @@ const App: React.FC = () => {
   };
 
   const SidebarItem: React.FC<{ active: boolean; icon: React.ReactNode; label: string; onClick: () => void }> = ({ active, icon, label, onClick }) => (
-    <button onClick={onClick} className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 ${active ? 'bg-red-700 text-white shadow-lg shadow-red-200 translate-x-1' : 'text-slate-500 hover:bg-gray-100 border border-transparent font-bold uppercase text-[10px] tracking-[0.15em]'}`}>
+    <button onClick={onClick} className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl transition-all duration-300 ${active ? 'bg-red-700 text-white shadow-xl shadow-red-200 translate-x-1' : 'text-slate-500 hover:bg-gray-100 border border-transparent font-bold uppercase text-[10px] tracking-[0.15em]'}`}>
       <span className={active ? 'text-white' : 'text-slate-400'}>{icon}</span>
       <span>{label}</span>
     </button>
@@ -107,11 +108,14 @@ const App: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-white text-slate-900 overflow-hidden">
+      {/* Sidebar */}
       <aside className="w-72 bg-gray-50 border-r border-slate-200 p-6 flex flex-col hidden lg:flex shrink-0">
-        <div className="flex items-center gap-3 px-2 mb-10">
-          <img src={LOGO_URL} className="w-12 h-12 object-contain" alt="Logo" />
+        <div className="flex items-center gap-4 px-1 mb-10">
+          <div className="w-12 h-12 flex-shrink-0">
+            <img src={LOGO_URL} className="w-full h-full object-contain" alt="Logo Universal" />
+          </div>
           <div className="flex flex-col">
-            <h1 className="text-2xl font-black text-red-700 leading-none tracking-tighter">UNIVERSAL</h1>
+            <h1 className="text-[22px] font-[900] text-red-700 leading-none tracking-tighter">UNIVERSAL</h1>
             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Gestión de Miembros</span>
           </div>
         </div>
@@ -123,12 +127,13 @@ const App: React.FC = () => {
         </nav>
 
         <div className="pt-6 border-t border-slate-200">
-          <button onClick={() => { setEditingMember(undefined); setIsFormOpen(true); }} className="w-full bg-red-700 text-white px-4 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-red-800 transition-all shadow-xl shadow-red-100">
+          <button onClick={() => { setEditingMember(undefined); setIsFormOpen(true); }} className="w-full bg-red-700 text-white px-4 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-red-800 transition-all shadow-xl shadow-red-100 active:scale-95">
             {ICONS.Plus} Nuevo Miembro
           </button>
         </div>
       </aside>
 
+      {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 bg-white relative overflow-hidden">
         <header className="sticky top-0 bg-white/80 backdrop-blur-xl border-b border-slate-200 px-8 py-5 flex items-center justify-between z-30">
           <div className="flex-1 max-w-xl">
@@ -136,7 +141,7 @@ const App: React.FC = () => {
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">{ICONS.Search}</span>
               <input 
                 type="text" 
-                placeholder="Buscar miembros..." 
+                placeholder="Buscar por nombre, celular o grupo..." 
                 className="w-full pl-12 pr-4 py-3 bg-gray-100/50 border border-transparent focus:bg-white focus:border-red-200 focus:ring-4 focus:ring-red-50 rounded-2xl outline-none transition-all font-medium text-sm" 
                 value={searchQuery} 
                 onChange={(e) => setSearchQuery(e.target.value)} 

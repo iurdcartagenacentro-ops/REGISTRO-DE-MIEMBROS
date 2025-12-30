@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Member, ChurchGroup, MaritalStatus } from '../types';
 import { ICONS } from '../constants';
-import { Camera, RefreshCw, Upload, Trash2, Check, PenTool, Eraser } from 'lucide-react';
+import { Camera, RefreshCw, Upload, Trash2, Check, Eraser } from 'lucide-react';
 
 const LOGO_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Universal_Church_of_the_Kingdom_of_God_Logo.svg/1024px-Universal_Church_of_the_Kingdom_of_God_Logo.svg.png';
 
@@ -154,11 +154,11 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
 
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-50 w-full max-w-3xl rounded-[2.5rem] shadow-2xl border border-slate-300 overflow-hidden animate-in fade-in zoom-in duration-300 logo-watermark form-watermark">
+      <div className="bg-gray-50 w-full max-w-3xl rounded-[2.5rem] shadow-2xl border border-slate-300 overflow-hidden animate-in fade-in zoom-in duration-300 logo-watermark">
         <div className="flex items-center justify-between p-8 border-b border-slate-200 bg-white relative z-10">
-          <div className="flex items-center gap-3">
-            <img src={LOGO_URL} className="w-10 h-10 object-contain" />
-            <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">
+          <div className="flex items-center gap-4">
+            <img src={LOGO_URL} className="w-10 h-10 object-contain" alt="Universal Heart Logo" />
+            <h2 className="text-2xl font-[900] text-slate-900 uppercase tracking-tight">
               {initialData?.id ? 'Editar Registro' : 'Registro Universal'}
             </h2>
           </div>
@@ -239,16 +239,16 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className={labelClasses}>Departamento</label>
-              <input className={inputClasses} value={formData.departamento} onChange={e => setFormData({ ...formData, departamento: e.target.value })} />
+              <label className={labelClasses}>Barrio</label>
+              <input className={inputClasses} value={formData.barrio} onChange={e => setFormData({ ...formData, barrio: e.target.value })} />
             </div>
             <div>
               <label className={labelClasses}>Ciudad</label>
               <input className={inputClasses} value={formData.ciudad} onChange={e => setFormData({ ...formData, ciudad: e.target.value })} />
             </div>
             <div>
-              <label className={labelClasses}>Barrio</label>
-              <input className={inputClasses} value={formData.barrio} onChange={e => setFormData({ ...formData, barrio: e.target.value })} />
+              <label className={labelClasses}>Departamento</label>
+              <input className={inputClasses} value={formData.departamento} onChange={e => setFormData({ ...formData, departamento: e.target.value })} />
             </div>
           </div>
 
