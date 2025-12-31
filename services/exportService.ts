@@ -1,7 +1,8 @@
 
 import { Member } from '../types';
 
-const LOGO_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Universal_Church_of_the_Kingdom_of_God_Logo.svg/1024px-Universal_Church_of_the_Kingdom_of_God_Logo.svg.png';
+// Logo oficial: Corazón Rojo con Paloma Blanca
+const LOGO_URL = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cGF0aCBmaWxsPSIjOTkxYjFiIiBkPSJNMjU2IDQ2NEMyNDAgNDY0IDM3LjYgMzAyLjQgMzcuNiAxNjNDMzcuNiA4Ni40IDk3LjYgMzIgMTY4IDMyQzIxMi44IDMyIDI0Mi40IDU0LjQgMjU2IDc2LjRDIDI2OS42IDU0LjQgMjk5LjIgMzIgMzQ0IDMyQzQxNC40IDMyIDQ3NC40IDg2LjQgNDc0LjQgMTYzQzQ3NC40IDMwMi40IDI3MiA0NjQgMjU2IDQ2NFoiLz4KICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDI0IDE1N0MzOTIgMTY1IDMzNiAxOTcgMjk2IDIyN0MyNjQgMjUxIDI1NiAyNjcgMjU2IDI2N0MyNTYgMjY3IDI0OCAyNTEgMjE2IDIyN0MxNzYgMTk3IDEyMCAxNjUgODggMTU3QzEyOCAxOTcgMTYwIDIzNyAxNjAgMjM3QzE2MCAyMzcgMTI4IDI2MSAxMzYgMjc3QzE0NCAyOTMgMTg0IDMwOSAyMDggMzI1QzIzMiAzNDkgMjU2IDM4OSAyNTYgMzg5QzI1NiAzODkgMjgwIDM0OSAzMDQgMzI1QzMyOCAzMDkgMzY4IDI5MyAzNzYgMjc3QzM4NCAyNjEgMzUyIDIzNyAzNTIgMjM3QzM1MiAyMzcgMzg0IDE5NyA0MjQgMTU3WiIvPgo8L3N2Zz4=';
 
 export const exportService = {
   downloadMemberAsJPG: async (member: Member) => {
@@ -9,148 +10,123 @@ export const exportService = {
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
 
-    // Tamaño A4 aproximado a 150 DPI para buena calidad de impresión
+    // Alta calidad A4 (300 DPI aprox)
     canvas.width = 1240;
     canvas.height = 1754;
 
-    // Fondo Blanco
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Encabezado Rojo
-    ctx.fillStyle = '#b91c1c';
-    ctx.fillRect(0, 0, canvas.width, 250);
+    // Cabecera Institucional
+    ctx.fillStyle = '#991b1b';
+    ctx.fillRect(0, 0, canvas.width, 300);
 
-    // Función robusta para cargar imágenes (maneja base64 y URLs externas)
     const loadImg = (url: string): Promise<HTMLImageElement> => {
       return new Promise((resolve, reject) => {
         const img = new Image();
-        // Solo aplicar crossOrigin a URLs externas, no a strings base64 (data:)
         if (url && !url.startsWith('data:')) {
           img.crossOrigin = 'anonymous';
         }
         img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error(`No se pudo cargar la imagen`));
+        img.onerror = () => reject(new Error(`Error cargando imagen`));
         img.src = url;
       });
     };
 
     try {
-      // 1. Dibujar Logo
+      // 1. Logo Universal
       try {
         const logo = await loadImg(LOGO_URL);
-        ctx.drawImage(logo, 60, 50, 150, 150);
+        ctx.drawImage(logo, 80, 75, 150, 150);
       } catch (e) {
-        console.warn("No se pudo cargar el logo externo, omitiendo...");
+        console.warn("Logo no disponible");
       }
 
-      // Texto Encabezado
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 80px Inter, sans-serif';
-      ctx.fillText('UNIVERSAL', 240, 130);
-      ctx.font = '30px Inter, sans-serif';
-      ctx.fillText('REGISTRO OFICIAL DE MIEMBROS', 245, 180);
+      ctx.font = 'bold 85px Inter, Arial, sans-serif';
+      ctx.fillText('UNIVERSAL', 270, 160);
+      ctx.font = '30px Inter, Arial, sans-serif';
+      ctx.fillText('SISTEMA DE GESTIÓN DE MIEMBROS', 275, 210);
 
-      // 2. Foto del Miembro
-      ctx.strokeStyle = '#e2e8f0';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(850, 300, 330, 330);
+      // 2. Foto de Perfil
+      ctx.strokeStyle = '#f1f5f9';
+      ctx.lineWidth = 10;
+      ctx.strokeRect(850, 350, 310, 310);
       
       if (member.imageUrl) {
         try {
           const profileImg = await loadImg(member.imageUrl);
-          // Recortar imagen para que sea cuadrada y encaje en el marco
-          const size = Math.min(profileImg.width, profileImg.height);
-          const startX = (profileImg.width - size) / 2;
-          const startY = (profileImg.height - size) / 2;
-          ctx.drawImage(profileImg, startX, startY, size, size, 855, 305, 320, 320);
+          ctx.drawImage(profileImg, 855, 355, 300, 300);
         } catch (e) {
-          ctx.fillStyle = '#f1f5f9';
-          ctx.fillRect(855, 305, 320, 320);
-          ctx.fillStyle = '#94a3b8';
-          ctx.font = '30px Inter, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText('Error al cargar foto', 1015, 475);
-          ctx.textAlign = 'left';
+          ctx.fillStyle = '#f8fafc';
+          ctx.fillRect(855, 355, 300, 300);
         }
-      } else {
-        ctx.fillStyle = '#f1f5f9';
-        ctx.fillRect(855, 305, 320, 320);
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '30px Inter, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('Sin Foto', 1015, 475);
-        ctx.textAlign = 'left';
       }
 
-      // 3. Cuerpo de Datos
-      const drawField = (label: string, value: string, x: number, y: number) => {
-        ctx.font = 'bold 22px Inter, sans-serif';
-        ctx.fillStyle = '#64748b';
+      // 3. Datos del Miembro
+      const drawInfo = (label: string, value: string, x: number, y: number) => {
+        ctx.font = 'bold 24px Inter, sans-serif';
+        ctx.fillStyle = '#94a3b8';
         ctx.fillText(label.toUpperCase(), x, y);
-        ctx.font = 'bold 36px Inter, sans-serif';
-        ctx.fillStyle = '#0f172a';
-        ctx.fillText(value || '---', x, y + 50);
+        ctx.font = 'bold 38px Inter, sans-serif';
+        ctx.fillStyle = '#1e293b';
+        ctx.fillText(value || 'N/A', x, y + 55);
       };
 
-      let startY = 350;
-      const col1 = 80;
-      const col2 = 500; // Ajustado para dar más espacio
+      let currentY = 400;
+      const leftCol = 100;
+      const rightCol = 500;
 
-      drawField('Nombre Completo', `${member.firstName} ${member.lastName}`, col1, startY);
-      drawField('Celular / Teléfono', member.phone, col1, startY + 150);
-      drawField('Estado Civil', member.maritalStatus, col2, startY + 150);
+      drawInfo('Nombre Completo', `${member.firstName} ${member.lastName}`, leftCol, currentY);
+      drawInfo('Teléfono / Móvil', member.phone, leftCol, currentY + 160);
+      drawInfo('Estado Civil', member.maritalStatus, rightCol, currentY + 160);
       
-      drawField('Dirección', member.address, col1, startY + 300);
-      drawField('Barrio', member.barrio, col1, startY + 450);
-      drawField('Ciudad', member.ciudad, col2, startY + 450);
+      drawInfo('Dirección de Vivienda', member.address, leftCol, currentY + 320);
+      drawInfo('Barrio', member.barrio, leftCol, currentY + 480);
+      drawInfo('Ciudad / Localidad', member.ciudad, rightCol, currentY + 480);
       
-      drawField('Departamento', member.departamento, col1, startY + 600);
-      drawField('Grupo de Participación', member.group, col2, startY + 600);
+      drawInfo('Grupo Pastoral', member.group, leftCol, currentY + 640);
+      drawInfo('Tiempo en la Obra', member.churchTime, rightCol, currentY + 640);
 
-      drawField('Fecha de Nacimiento', member.birthDate, col1, startY + 750);
-      drawField('Fecha de Bautismo', member.baptismDate || 'No registra', col2, startY + 750);
+      drawInfo('Fecha de Nacimiento', member.birthDate, leftCol, currentY + 800);
+      drawInfo('Fecha de Bautismo', member.baptismDate || '---', rightCol, currentY + 800);
 
-      drawField('Iglesia', member.churchName, col1, startY + 900);
-      drawField('Tiempo de Permanencia', member.churchTime, col2, startY + 900);
-
-      // 4. Firma
+      // 4. Espacio para Firma
       ctx.fillStyle = '#f8fafc';
-      ctx.fillRect(80, 1350, 1080, 250);
-      ctx.strokeStyle = '#cbd5e1';
-      ctx.strokeRect(80, 1350, 1080, 250);
+      ctx.fillRect(100, 1400, 1040, 220);
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.strokeRect(100, 1400, 1040, 220);
       
       ctx.font = 'bold 20px Inter, sans-serif';
       ctx.fillStyle = '#94a3b8';
-      ctx.fillText('FIRMA DEL MIEMBRO REGISTRADO', 100, 1385);
+      ctx.textAlign = 'center';
+      ctx.fillText('FIRMA DEL MIEMBRO', 620, 1650);
+      ctx.textAlign = 'left';
 
       if (member.signatureUrl) {
         try {
-          const sigImg = await loadImg(member.signatureUrl);
-          ctx.drawImage(sigImg, 100, 1400, 1000, 180);
-        } catch (e) {
-          console.error("Error al cargar la firma en el canvas");
-        }
+          const sig = await loadImg(member.signatureUrl);
+          ctx.drawImage(sig, 150, 1420, 940, 180);
+        } catch (e) {}
       }
 
-      // 5. Pie de página
-      ctx.fillStyle = '#b91c1c';
+      // Pie de Página
+      ctx.fillStyle = '#991b1b';
       ctx.fillRect(0, 1720, canvas.width, 34);
-      ctx.font = 'italic 18px Inter, sans-serif';
-      ctx.fillStyle = '#64748b';
+      ctx.font = '16px Inter, sans-serif';
+      ctx.fillStyle = '#94a3b8';
       ctx.textAlign = 'center';
-      ctx.fillText(`Documento generado oficialmente el ${new Date().toLocaleDateString()} - ID: ${member.id}`, canvas.width / 2, 1700);
+      ctx.fillText(`Registro generado vía Universal App - ID: ${member.id} - Fecha: ${new Date().toLocaleDateString()}`, canvas.width / 2, 1700);
 
-      // 6. Generar Descarga
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+      const download = canvas.toDataURL('image/jpeg', 0.9);
       const link = document.createElement('a');
-      link.download = `Ficha_${member.firstName}_${member.lastName}.jpg`;
-      link.href = dataUrl;
+      link.download = `Universal_Ficha_${member.firstName}.jpg`;
+      link.href = download;
       link.click();
 
-    } catch (error) {
-      console.error("Error crítico generando ficha JPG:", error);
-      alert("Error al generar la ficha. Esto puede deberse a la configuración de seguridad del navegador con imágenes externas. Intente de nuevo o use una foto diferente.");
+    } catch (err) {
+      console.error(err);
+      alert("Error exportando documento.");
     }
   }
 };

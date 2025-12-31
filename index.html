@@ -4,15 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#b91c1c">
+  <meta name="theme-color" content="#991b1b">
   
   <!-- Metadatos de la App -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Universal">
-  <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Universal_Church_of_the_Kingdom_of_God_Logo.svg/512px-Universal_Church_of_the_Kingdom_of_God_Logo.svg.png">
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cGF0aCBmaWxsPSIjOTkxYjFiIiBkPSJNMjU2IDQ2NEMyNDAgNDY0IDM3LjYgMzAyLjQgMzcuNiAxNjNDMzcuNiA4Ni40IDk3LjYgMzIgMTY4IDMyQzIxMi44IDMyIDI0Mi40IDU0LjQgMjU2IDc2LjRDIDI2OS42IDU0LjQgMjk5LjIgMzIgMzQ0IDMyQzQxNC40IDMyIDQ3NC40IDg2LjQgNDc0LjQgMTYzQzQ3NC40IDMwMi40IDI3MiA0NjQgMjU2IDQ2NFoiLz4KICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDI0IDE1N0MzOTIgMTY1IDMzNiAxOTcgMjk2IDIyN0MyNjQgMjUxIDI1NiAyNjcgMjU2IDI2N0MyNTYgMjY3IDI0OCAyNTEgMjE2IDIyN0MxNzYgMTk3IDEyMCAxNjUgODggMTU3QzEyOCAxOTcgMTYwIDIzNyAxNjAgMjM3QzE2MCAyMzcgMTI4IDI2MSAxMzYgMjc3QzE0NCAyOTMgMTg0IDMwOSAyMDggMzI1QzIzMiAzNDkgMjU2IDM4OSAyNTYgMzg5QzI1NiAzODkgMjgwIDM0OSAzMDQgMzI1QzMyOCAzMDkgMzY4IDI5MyAzNzYgMjc3QzM4NCAyNjEgMzUyIDIzNyAzNTIgMjM3QzM1MiAyMzcgMzg0IDE5NyA0MjQgMTU3WiIvPgo8L3N2Zz4=">
   
-  <title>UNIVERSAL - Registro de Miembros</title>
+  <title>UNIVERSAL - Gestión de Miembros</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -24,6 +24,7 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
     
     #loading-screen {
@@ -33,19 +34,19 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: white;
+      background: #ffffff;
       z-index: 9999;
-      transition: opacity 0.5s ease-out;
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .loader {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #b91c1c;
+      width: 48px;
+      height: 48px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #991b1b;
       border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 20px;
+      animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+      margin-bottom: 24px;
     }
 
     @keyframes spin {
@@ -53,34 +54,39 @@
       100% { transform: rotate(360deg); }
     }
 
-    .logo-watermark::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 500px;
-      height: 500px;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Universal_Church_of_the_Kingdom_of_God_Logo.svg/1024px-Universal_Church_of_the_Kingdom_of_God_Logo.svg.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      opacity: 0.05;
-      pointer-events: none;
-      z-index: 0;
-    }
-
     .animate-fade-in {
-      animation: fadeIn 0.4s ease-out forwards;
+      animation: fadeIn 0.5s ease-out forwards;
     }
     
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
     
     html, body, #root {
       height: 100%;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #cbd5e1;
+    }
+    
+    .logo-pulse {
+      animation: pulse 2s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
     }
   </style>
 
@@ -99,9 +105,9 @@
 </head>
 <body>
   <div id="loading-screen">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cGF0aCBmaWxsPSIjOTkxYjFiIiBkPSJNMjU2IDQ2NEMyNDAgNDY0IDM3LjYgMzAyLjQgMzcuNiAxNjNDMzcuNiA4Ni40IDk3LjYgMzIgMTY4IDMyQzIxMi44IDMyIDI0Mi40IDU0LjQgMjU2IDc2LjRDIDI2OS42IDU0LjQgMjk5LjIgMzIgMzQ0IDMyQzQxNC40IDMyIDQ3NC40IDg2LjQgNDc0LjQgMTYzQzQ3NC40IDMwMi40IDI3MiA0NjQgMjU2IDQ2NFoiLz4KICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDI0IDE1N0MzOTIgMTY1IDMzNiAxOTcgMjk2IDIyN0MyNjQgMjUxIDI1NiAyNjcgMjU2IDI2N0MyNTYgMjY3IDI0OCAyNTEgMjE2IDIyN0MxNzYgMTk3IDEyMCAxNjUgODggMTU3QzEyOCAxOTcgMTYwIDIzNyAxNjAgMjM3QzE2MCAyMzcgMTI4IDI2MSAxMzYgMjc3QzE0NCAyOTMgMTg0IDMwOSAyMDggMzI1QzIzMiAzNDkgMjU2IDM4OSAyNTYgMzg5QzI1NiAzODkgMjgwIDM0OSAzMDQgMzI1QzMyOCAzMDkgMzY4IDI5MyAzNzYgMjc3QzE0NCAyNjEgMzUyIDIzNyAzNTIgMjM3QzE1MiAyMzcgMzg0IDE5NyA0MjQgMTU3WiIvPgo8L3N2Zz4=" class="w-20 h-20 mb-6 logo-pulse" />
     <div class="loader"></div>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Universal_Church_of_the_Kingdom_of_God_Logo.svg/1024px-Universal_Church_of_the_Kingdom_of_God_Logo.svg.png" style="width: 50px; margin-bottom: 10px;" />
-    <p style="font-weight: 900; color: #b91c1c; letter-spacing: 0.2em; font-size: 10px; text-transform: uppercase;">Universal</p>
+    <p style="font-weight: 900; color: #991b1b; letter-spacing: 0.3em; font-size: 11px; text-transform: uppercase;">Universal App</p>
   </div>
   
   <div id="root"></div>

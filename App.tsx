@@ -21,11 +21,12 @@ import {
   Loader2,
   Menu,
   X,
-  Plus
+  Plus,
+  UserPlus
 } from 'lucide-react';
 
-// URL del logo oficial (Corazón con paloma)
-const LOGO_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Universal_Church_of_the_Kingdom_of_God_Logo.svg/1024px-Universal_Church_of_the_Kingdom_of_God_Logo.svg.png';
+// Logo oficial: Corazón Rojo con Paloma Blanca (Optimizado del diseño del usuario)
+const LOGO_URL = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cGF0aCBmaWxsPSIjOTkxYjFiIiBkPSJNMjU2IDQ2NEMyNDAgNDY0IDM3LjYgMzAyLjQgMzcuNiAxNjNDMzcuNiA4Ni40IDk3LjYgMzIgMTY4IDMyQzIxMi44IDMyIDI0Mi40IDU0LjQgMjU2IDc2LjRDIDI2OS42IDU0LjQgMjk5LjIgMzIgMzQ0IDMyQzQxNC40IDMyIDQ3NC40IDg2LjQgNDc0LjQgMTYzQzQ3NC40IDMwMi40IDI3MiA0NjQgMjU2IDQ2NFoiLz4KICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDI0IDE1N0MzOTIgMTY1IDMzNiAxOTcgMjk2IDIyN0MyNjQgMjUxIDI1NiAyNjcgMjU2IDI2N0MyNTYgMjY3IDI0OCAyNTEgMjE2IDIyN0MxNzYgMTk3IDEyMCAxNjUgODggMTU3QzEyOCAxOTcgMTYwIDIzNyAxNjAgMjM3QzE2MCAyMzcgMTI4IDI2MSAxMzYgMjc3QzE0NCAyOTMgMTg0IDMwOSAyMDggMzI1QzIzMiAzNDkgMjU2IDM4OSAyNTYgMzg5QzI1NiAzODkgMjgwIDM0OSAzMDQgMzI1QzMyOCAzMDkgMzY4IDI5MyAzNzYgMjc3QzM4NCAyNjEgMzUyIDIzNyAzNTIgMjM3QzM1MiAyMzcgMzg0IDE5NyA0MjQgMTU3WiIvPgo8L3N2Zz4=';
 
 const App: React.FC = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -114,36 +115,36 @@ const App: React.FC = () => {
   };
 
   const SidebarItem: React.FC<{ active: boolean; icon: React.ReactNode; label: string; onClick: () => void }> = ({ active, icon, label, onClick }) => (
-    <button onClick={() => { onClick(); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl transition-all duration-300 ${active ? 'bg-red-700 text-white shadow-xl shadow-red-200 translate-x-1' : 'text-slate-500 hover:bg-gray-100 border border-transparent font-bold uppercase text-[10px] tracking-[0.15em]'}`}>
+    <button onClick={() => { onClick(); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl transition-all duration-300 ${active ? 'bg-red-800 text-white shadow-xl shadow-red-200 translate-x-1' : 'text-slate-500 hover:bg-gray-100 border border-transparent font-bold uppercase text-[10px] tracking-[0.15em]'}`}>
       <span className={active ? 'text-white' : 'text-slate-400'}>{icon}</span>
       <span>{label}</span>
     </button>
   );
 
   const NavigationContent = () => (
-    <>
-      <div className="flex items-center gap-4 px-1 mb-10">
+    <div className="flex flex-col h-full">
+      <div className="flex items-center gap-4 px-1 mb-10 shrink-0">
         <div className="w-12 h-12 flex-shrink-0">
           <img src={LOGO_URL} className="w-full h-full object-contain" alt="Logo Universal" />
         </div>
         <div className="flex flex-col">
-          <h1 className="text-[22px] font-[900] text-red-700 leading-none tracking-tighter">UNIVERSAL</h1>
+          <h1 className="text-[22px] font-[900] text-red-800 leading-none tracking-tighter">UNIVERSAL</h1>
           <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Gestión de Miembros</span>
         </div>
       </div>
       
-      <nav className="flex-1 space-y-2">
+      <nav className="flex-1 space-y-2 overflow-y-auto pr-2 custom-scrollbar">
         <SidebarItem active={view === 'dashboard'} icon={ICONS.Dashboard} label="Panel de Control" onClick={() => { setView('dashboard'); setSelectedMember(null); }} />
         <SidebarItem active={view === 'list'} icon={ICONS.Users} label="Registro Miembros" onClick={() => setView('list')} />
         <SidebarItem active={view === 'settings'} icon={<Database size={20} />} label="Configuración" onClick={() => setView('settings')} />
       </nav>
 
-      <div className="pt-6 border-t border-slate-200">
-        <button onClick={() => { setEditingMember(undefined); setIsFormOpen(true); setIsMobileMenuOpen(false); }} className="w-full bg-red-700 text-white px-4 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-red-800 transition-all shadow-xl shadow-red-100 active:scale-95">
+      <div className="pt-6 border-t border-slate-200 shrink-0">
+        <button onClick={() => { setEditingMember(undefined); setIsFormOpen(true); setIsMobileMenuOpen(false); }} className="w-full bg-red-800 text-white px-4 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-red-900 transition-all shadow-xl shadow-red-100 active:scale-95">
           {ICONS.Plus} Nuevo Miembro
         </button>
       </div>
-    </>
+    </div>
   );
 
   return (
@@ -154,7 +155,7 @@ const App: React.FC = () => {
           <div className="w-72 h-full bg-white p-6 shadow-2xl flex flex-col animate-in slide-in-from-left duration-300" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-8">
               <img src={LOGO_URL} className="w-10 h-10 object-contain" alt="Logo" />
-              <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-slate-400 hover:text-red-700 transition-colors border border-slate-100 rounded-xl">
+              <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-slate-400 hover:text-red-800 transition-colors border border-slate-100 rounded-xl">
                 <X size={24} />
               </button>
             </div>
@@ -170,10 +171,10 @@ const App: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 bg-white relative overflow-hidden">
-        {/* Floating Action Button for Mobile/Tablet */}
+        {/* FAB: Visible en móviles y tablets (incluida orientación horizontal) */}
         <button 
           onClick={() => { setEditingMember(undefined); setIsFormOpen(true); }}
-          className="fixed bottom-6 right-6 w-16 h-16 bg-red-700 text-white rounded-full flex items-center justify-center shadow-2xl shadow-red-200 z-[40] lg:hidden active:scale-90 transition-transform"
+          className="fixed bottom-6 right-6 w-16 h-16 bg-red-800 text-white rounded-full flex items-center justify-center shadow-2xl shadow-red-200 z-[40] lg:hidden active:scale-90 transition-transform hover:scale-105"
           aria-label="Nuevo Miembro"
         >
           <Plus size={32} />
@@ -183,16 +184,16 @@ const App: React.FC = () => {
           <div className="flex items-center gap-3 md:gap-4 flex-1">
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2.5 bg-gray-50 text-slate-500 hover:text-red-700 lg:hidden transition-colors rounded-xl border border-slate-200"
+              className="p-2.5 bg-gray-50 text-slate-500 hover:text-red-800 lg:hidden transition-colors rounded-xl border border-slate-200"
             >
               <Menu size={24} />
             </button>
             <div className="flex-1 max-w-xl">
               <div className="relative group">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-red-500 transition-colors">{ICONS.Search}</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-red-600 transition-colors">{ICONS.Search}</span>
                 <input 
                   type="text" 
-                  placeholder="Buscar..." 
+                  placeholder="Buscar miembros..." 
                   className="w-full pl-11 pr-4 py-2.5 bg-gray-100/50 border border-transparent focus:bg-white focus:border-red-200 focus:ring-4 focus:ring-red-50 rounded-2xl outline-none transition-all font-medium text-sm" 
                   value={searchQuery} 
                   onChange={(e) => setSearchQuery(e.target.value)} 
@@ -201,51 +202,60 @@ const App: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-4 ml-4">
-             <div className="hidden sm:block text-right">
+             {/* Botón rápido en el Header para Tablets y Escritorio */}
+             <button 
+               onClick={() => { setEditingMember(undefined); setIsFormOpen(true); }}
+               className="hidden sm:flex items-center gap-2 px-4 py-2.5 bg-red-800 text-white rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-red-900 transition-all shadow-md active:scale-95"
+             >
+               <UserPlus size={16} /> <span className="hidden md:inline">Nuevo</span>
+             </button>
+             
+             <div className="hidden sm:block text-right ml-2">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight">Admin</p>
-                <p className="text-xs font-bold text-slate-700 leading-tight">Universal App</p>
+                <p className="text-xs font-bold text-slate-700 leading-tight">Universal</p>
              </div>
-             <div className="w-10 h-10 rounded-2xl bg-red-700 border border-red-800 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-red-100">U</div>
+             <div className="w-10 h-10 rounded-2xl bg-red-800 border border-red-900 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-red-100 shrink-0 overflow-hidden">
+                <img src={LOGO_URL} className="w-6 h-6 object-contain brightness-200" alt="Logo" />
+             </div>
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
           <div className="max-w-7xl mx-auto">
             {view === 'dashboard' && <div className="animate-fade-in"><Dashboard members={members} /></div>}
             
             {view === 'settings' && (
               <div className="max-w-2xl animate-fade-in space-y-8">
                 <div className="flex items-center gap-4 mb-2">
-                   <div className="p-3 bg-red-50 text-red-700 rounded-2xl"><Database size={24} /></div>
-                   <h2 className="text-2xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">Ajustes</h2>
+                   <div className="p-3 bg-red-50 text-red-800 rounded-2xl"><Database size={24} /></div>
+                   <h2 className="text-2xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">Ajustes del Sistema</h2>
                 </div>
                 
                 <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm space-y-6">
                   <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <ShieldCheck className="text-green-600" size={20} /> Copias de Seguridad
+                    <ShieldCheck className="text-green-600" size={20} /> Base de Datos
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <button onClick={() => storageService.exportData()} className="flex items-center gap-3 px-6 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all">
-                      <Download size={18} /> Exportar JSON
+                      <Download size={18} /> Exportar Respaldo
                     </button>
                     <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-3 px-6 py-4 bg-white border-2 border-slate-200 text-slate-700 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-50 transition-all">
-                      <Upload size={18} /> Importar JSON
+                      <Upload size={18} /> Importar Datos
                     </button>
                     <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={handleImport} />
                     
                     <div className="sm:col-span-2 pt-4 mt-4 border-t border-slate-100">
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Exportación para Impresión</p>
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Exportación Digital</p>
                       <div className="flex gap-4">
                         <button 
                           disabled={!selectedMember || isExporting}
                           onClick={() => selectedMember && handleExportJPG(selectedMember)} 
-                          className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all ${selectedMember ? 'bg-red-700 text-white hover:bg-red-800' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                          className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all ${selectedMember ? 'bg-red-800 text-white hover:bg-red-900' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
                         >
                           {isExporting ? <Loader2 className="animate-spin" size={18} /> : <ImageIcon size={18} />}
-                          {selectedMember ? (isExporting ? 'Generando...' : `Descargar Ficha JPG (${selectedMember.firstName})`) : 'Selecciona un miembro para descargar JPG'}
+                          {selectedMember ? (isExporting ? 'Generando...' : `Ficha JPG (${selectedMember.firstName})`) : 'Seleccione un miembro'}
                         </button>
                       </div>
-                      {!selectedMember && <p className="text-[10px] text-red-400 mt-2 font-bold italic">* Para descargar una ficha individual, selecciónala primero en la sección de Registro de Miembros.</p>}
                     </div>
                   </div>
                 </div>
@@ -256,9 +266,9 @@ const App: React.FC = () => {
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 animate-fade-in">
                 <div className="xl:col-span-8 space-y-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-2xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">Registro General</h2>
+                    <h2 className="text-2xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">Registro de Miembros</h2>
                     <span className="px-4 py-2 bg-slate-100 text-slate-600 text-[10px] font-black rounded-xl border border-slate-200 uppercase tracking-widest">
-                      {filteredMembers.length} Miembros
+                      {filteredMembers.length} Personas
                     </span>
                   </div>
                   
@@ -274,10 +284,10 @@ const App: React.FC = () => {
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                           {filteredMembers.map(member => (
-                            <tr key={member.id} onClick={() => setSelectedMember(member)} className={`group cursor-pointer hover:bg-red-50/30 transition-all ${selectedMember?.id === member.id ? 'bg-red-50/50 border-l-4 border-red-700' : ''}`}>
+                            <tr key={member.id} onClick={() => setSelectedMember(member)} className={`group cursor-pointer hover:bg-red-50/30 transition-all ${selectedMember?.id === member.id ? 'bg-red-50/50 border-l-4 border-red-800' : ''}`}>
                               <td className="px-8 py-4">
                                 <div className="flex items-center gap-4">
-                                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center font-black text-red-700 overflow-hidden shadow-sm flex-shrink-0">
+                                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center font-black text-red-800 overflow-hidden shadow-sm flex-shrink-0">
                                     {member.imageUrl ? <img src={member.imageUrl} className="w-full h-full object-cover" /> : (member.firstName ? member.firstName[0] : '?')}
                                   </div>
                                   <div className="min-w-0">
@@ -287,12 +297,12 @@ const App: React.FC = () => {
                                 </div>
                               </td>
                               <td className="px-8 py-4">
-                                <span className="px-3 py-1 bg-white text-red-700 text-[9px] font-black rounded-lg border border-red-100 shadow-sm whitespace-nowrap">{member.group}</span>
+                                <span className="px-3 py-1 bg-white text-red-800 text-[9px] font-black rounded-lg border border-red-100 shadow-sm whitespace-nowrap">{member.group}</span>
                               </td>
                               <td className="px-8 py-4 text-right">
-                                <div className="flex gap-2 justify-end md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="flex gap-2 justify-end lg:opacity-0 group-hover:opacity-100 transition-opacity">
                                   <button onClick={(e) => { e.stopPropagation(); setEditingMember(member); setIsFormOpen(true); }} className="p-2 bg-white hover:bg-blue-50 text-blue-600 rounded-lg border border-slate-200 transition-colors shadow-sm">{ICONS.Settings}</button>
-                                  <button onClick={(e) => { e.stopPropagation(); handleDeleteMember(member.id); }} className="p-2 bg-white hover:bg-red-50 text-red-600 rounded-lg border border-slate-200 transition-colors shadow-sm">{ICONS.Close}</button>
+                                  <button onClick={(e) => { e.stopPropagation(); handleDeleteMember(member.id); }} className="p-2 bg-white hover:bg-red-50 text-red-800 rounded-lg border border-slate-200 transition-colors shadow-sm">{ICONS.Close}</button>
                                 </div>
                               </td>
                             </tr>
@@ -307,13 +317,13 @@ const App: React.FC = () => {
                   {selectedMember ? (
                     <div className="space-y-6 animate-fade-in">
                       <div className="bg-white p-6 md:p-8 rounded-[3rem] shadow-xl border border-slate-200 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-24 bg-red-700"></div>
+                        <div className="absolute top-0 left-0 w-full h-24 bg-red-800"></div>
                         <div className="relative pt-4 flex flex-col items-center">
                           <div className="w-28 h-28 rounded-[2rem] bg-white p-1 shadow-xl mb-4 overflow-hidden border-4 border-white">
                             <img src={selectedMember.imageUrl || `https://picsum.photos/seed/${selectedMember.id}/200/200`} className="w-full h-full object-cover rounded-[1.5rem]" alt="Profile" />
                           </div>
                           <h3 className="text-xl font-black text-slate-900 uppercase text-center">{selectedMember.firstName} {selectedMember.lastName}</h3>
-                          <span className="mt-2 px-4 py-1.5 bg-red-700 text-white rounded-xl text-[10px] font-black uppercase shadow-lg shadow-red-100">{selectedMember.group}</span>
+                          <span className="mt-2 px-4 py-1.5 bg-red-800 text-white rounded-xl text-[10px] font-black uppercase shadow-lg shadow-red-100">{selectedMember.group}</span>
                           
                           <div className="w-full space-y-4 text-left border-t border-slate-100 pt-6 mt-6">
                             <DetailRow icon={<Phone size={14} />} label="Celular" value={selectedMember.phone} />
@@ -330,18 +340,17 @@ const App: React.FC = () => {
                               {isExporting ? <Loader2 className="animate-spin" size={16} /> : <ImageIcon size={16} />}
                               {isExporting ? 'Procesando...' : 'Descargar Ficha JPG'}
                             </button>
-                            <button className="w-full flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 text-slate-500 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-50 transition-all">
-                              <Download size={16} /> Ficha PDF
-                            </button>
                           </div>
                         </div>
                       </div>
                       <AISuggestions member={selectedMember} />
                     </div>
                   ) : (
-                    <div className="bg-white p-12 rounded-[3rem] border-2 border-slate-100 border-dashed text-center flex flex-col items-center justify-center text-slate-300 min-h-[400px] hidden md:flex">
-                      <User size={40} className="mb-4" />
-                      <p className="font-black uppercase text-[10px] tracking-widest">Selecciona un registro</p>
+                    <div className="bg-white p-12 rounded-[3rem] border-2 border-slate-100 border-dashed text-center flex flex-col items-center justify-center text-slate-300 min-h-[400px] hidden xl:flex">
+                      <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                        <User size={32} className="text-slate-200" />
+                      </div>
+                      <p className="font-black uppercase text-[10px] tracking-widest">Selecciona un miembro para ver detalles</p>
                     </div>
                   )}
                 </div>
@@ -364,7 +373,7 @@ const App: React.FC = () => {
 
 const DetailRow: React.FC<{ icon: React.ReactNode; label: string; value: string }> = ({ icon, label, value }) => (
   <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-xl bg-gray-50 border border-slate-200 flex items-center justify-center text-red-700">{icon}</div>
+    <div className="w-8 h-8 rounded-xl bg-gray-50 border border-slate-200 flex items-center justify-center text-red-800">{icon}</div>
     <div className="flex-1 min-w-0">
       <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{label}</p>
       <p className="text-xs font-bold text-slate-800 truncate">{value || 'N/A'}</p>
