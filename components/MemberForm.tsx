@@ -4,8 +4,6 @@ import { Member, ChurchGroup, MaritalStatus } from '../types';
 import { ICONS } from '../constants';
 import { Camera, RefreshCw, Upload, Trash2, Check, Eraser } from 'lucide-react';
 
-const LOGO_URL = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cGF0aCBmaWxsPSIjOTkxYjFiIiBkPSJNMjU2IDQ2NEMyNDAgNDY0IDM3LjYgMzAyLjQgMzcuNiAxNjNDMzcuNiA4Ni40IDk3LjYgMzIgMTY4IDMyQzIxMi44IDMyIDI0Mi40IDU0LjQgMjU2IDc2LjRDIDI2OS42IDU0LjQgMjk5LjIgMzIgMzQ0IDMyQzQxNC40IDMyIDQ3NC40IDg2LjQgNDc0LjQgMTYzQzQ3NC40IDMwMi40IDI3MiA0NjQgMjU2IDQ2NFoiLz4KICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDI0IDE1N0MzOTIgMTY1IDMzNiAxOTcgMjk2IDIyN0MyNjQgMjUxIDI1NiAyNjcgMjU2IDI2N0MyNTYgMjY3IDI0OCAyNTEgMjE2IDIyN0MxNzYgMTk3IDEyMCAxNjUgODggMTU3QzEyOCAxOTcgMTYwIDIzNyAxNjAgMjM3QzE2MCAyMzcgMTI4IDI2MSAxMzYgMjc3QzE0NCAyOTMgMTg0IDMwOSAyMDggMzI1QzIzMiAzNDkgMjU2IDM4OSAyNTYgMzg5QzI1NiAzODkgMjgwIDM0OSAzMDQgMzI1QzMyOCAzMDkgMzY4IDI5MyAzNzYgMjc3QzM4NCAyNjEgMzUyIDIzNyAzNTIgMjM3QzM1MiAyMzcgMzg0IDE5NyA0MjQgMTU3WiIvPgo8L3N2Zz4=';
-
 interface MemberFormProps {
   onSubmit: (member: Member) => void;
   onCancel: () => void;
@@ -54,7 +52,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
       })
       .catch(err => {
         console.error("Error accessing camera:", err);
-        alert("No se pudo acceder a la cámara. Asegúrese de otorgar permisos.");
+        alert("No se pudo acceder a la cámara.");
         setIsCameraActive(false);
       });
     }
@@ -82,7 +80,6 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
       canvas.height = size;
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        // Recorte central para foto cuadrada
         const startX = (video.videoWidth - size) / 2;
         const startY = (video.videoHeight - size) / 2;
         if (facingMode === 'user') {
@@ -157,29 +154,24 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
     } as Member);
   };
 
-  const inputClasses = "w-full px-4 py-3 rounded-2xl bg-white/90 border border-slate-300 focus:border-red-600 focus:ring-4 focus:ring-red-50 outline-none transition-all placeholder:text-slate-400 font-medium text-slate-700 shadow-sm";
+  const inputClasses = "w-full px-4 py-3 rounded-2xl bg-white/90 border border-slate-300 focus:border-[#2b507d] focus:ring-4 focus:ring-blue-50 outline-none transition-all placeholder:text-slate-400 font-medium text-slate-700 shadow-sm";
   const labelClasses = "text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block";
 
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-3xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[95vh] flex flex-col">
-        {/* Header del Modal */}
         <div className="flex items-center justify-between p-6 md:p-8 border-b border-slate-100 bg-white shrink-0">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-red-800 rounded-xl flex items-center justify-center overflow-hidden p-1.5 shadow-lg shadow-red-100">
-              <img src={LOGO_URL} className="w-full h-full object-contain brightness-200" alt="Logo" />
-            </div>
-            <h2 className="text-xl md:text-2xl font-black text-slate-900 uppercase tracking-tight">
-              {initialData?.id ? 'Editar Perfil' : 'Registro de Miembro'}
+            <h2 className="text-xl md:text-2xl font-black text-[#2b507d] uppercase tracking-tight">
+              {initialData?.id ? 'Editar Registro' : 'Nuevo Registro'}
             </h2>
           </div>
-          <button onClick={onCancel} className="p-2.5 hover:bg-red-50 rounded-xl text-slate-400 hover:text-red-800 transition-colors border border-slate-200">
+          <button onClick={onCancel} className="p-2.5 hover:bg-blue-50 rounded-xl text-slate-400 hover:text-[#2b507d] transition-colors border border-slate-200">
             {ICONS.Close}
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-8 overflow-y-auto custom-scrollbar flex-1">
-          {/* Sección de Foto */}
           <div className="flex flex-col items-center gap-6 pb-2">
             <div className="relative w-40 h-40 rounded-[2.5rem] bg-gray-50 overflow-hidden shadow-inner border-2 border-slate-200 group">
               {isCameraActive ? (
@@ -201,8 +193,8 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
             <div className="flex gap-3">
               {!isCameraActive ? (
                 <>
-                  <button type="button" onClick={() => setIsCameraActive(true)} className="flex items-center gap-2 px-6 py-3 bg-red-800 text-white rounded-2xl text-sm font-bold hover:bg-red-900 transition-all shadow-xl shadow-red-50">
-                    <Camera size={18} /> Tomar Foto
+                  <button type="button" onClick={() => setIsCameraActive(true)} className="flex items-center gap-2 px-6 py-3 bg-[#2b507d] text-white rounded-2xl text-sm font-bold hover:bg-[#1e3a5a] transition-all shadow-xl shadow-blue-50">
+                    <Camera size={18} /> Cámara
                   </button>
                   <button type="button" onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-300 text-slate-600 rounded-2xl text-sm font-bold hover:bg-gray-50 transition-all">
                     <Upload size={18} /> Galería
@@ -222,7 +214,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className={labelClasses}>Nombre(s)</label>
+              <label className={labelClasses}>Nombres</label>
               <input required className={inputClasses} value={formData.firstName} onChange={e => setFormData({ ...formData, firstName: e.target.value })} />
             </div>
             <div>
@@ -233,7 +225,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className={labelClasses}>Celular / WhatsApp</label>
+              <label className={labelClasses}>Celular</label>
               <input required className={inputClasses} value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
             </div>
             <div>
@@ -245,7 +237,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
           </div>
 
           <div>
-            <label className={labelClasses}>Dirección de Residencia</label>
+            <label className={labelClasses}>Dirección</label>
             <input className={inputClasses} value={formData.address} onChange={e => setFormData({ ...formData, address: e.target.value })} />
           </div>
 
@@ -266,41 +258,29 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className={labelClasses}>Fecha de Nacimiento</label>
+              <label className={labelClasses}>Nacimiento</label>
               <input type="date" required className={inputClasses} value={formData.birthDate} onChange={e => setFormData({ ...formData, birthDate: e.target.value })} />
             </div>
             <div>
-              <label className={labelClasses}>Fecha de Bautismo (Opcional)</label>
+              <label className={labelClasses}>Bautismo</label>
               <input type="date" className={inputClasses} value={formData.baptismDate} onChange={e => setFormData({ ...formData, baptismDate: e.target.value })} />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className={labelClasses}>Iglesia Local</label>
-              <input className={inputClasses} value={formData.churchName} onChange={e => setFormData({ ...formData, churchName: e.target.value })} />
-            </div>
-            <div>
-              <label className={labelClasses}>Tiempo en la Obra</label>
-              <input className={inputClasses} placeholder="Ej: 5 meses, 3 años" value={formData.churchTime} onChange={e => setFormData({ ...formData, churchTime: e.target.value })} />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className={labelClasses}>Grupo Principal</label>
+              <label className={labelClasses}>Grupo</label>
               <select className={inputClasses} value={formData.group} onChange={e => setFormData({ ...formData, group: e.target.value as ChurchGroup })}>
                 {Object.values(ChurchGroup).map(g => <option key={g} value={g}>{g}</option>)}
               </select>
             </div>
           </div>
 
-          {/* Sección de Firma */}
           <div className="space-y-4 pt-4">
             <div className="flex items-center justify-between px-1">
-              <label className={labelClasses}>Firma Digital</label>
+              <label className={labelClasses}>Firma</label>
               <button type="button" onClick={clearSignature} className="text-[10px] font-black text-red-600 flex items-center gap-1 hover:underline uppercase tracking-widest">
-                <Eraser size={12} /> Borrar Firma
+                <Eraser size={12} /> Limpiar
               </button>
             </div>
             <div className="bg-gray-50 border-2 border-slate-200 rounded-3xl overflow-hidden cursor-crosshair shadow-inner relative">
@@ -325,13 +305,12 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
             </div>
           </div>
 
-          {/* Acciones */}
           <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-slate-100 bg-white">
             <button type="button" onClick={onCancel} className="flex-1 px-8 py-4 rounded-2xl border-2 border-slate-100 text-slate-500 font-bold hover:bg-gray-50 transition-all text-sm uppercase tracking-widest">
-              Descartar
+              Cancelar
             </button>
-            <button type="submit" className="flex-1 px-8 py-4 rounded-2xl bg-red-800 text-white font-bold hover:bg-red-900 shadow-2xl shadow-red-100 transition-all active:scale-95 text-sm uppercase tracking-widest">
-              {initialData?.id ? 'Actualizar Registro' : 'Completar Registro'}
+            <button type="submit" className="flex-1 px-8 py-4 rounded-2xl bg-[#2b507d] text-white font-bold hover:bg-[#1e3a5a] shadow-2xl shadow-blue-100 transition-all active:scale-95 text-sm uppercase tracking-widest">
+              Guardar Miembro
             </button>
           </div>
         </form>

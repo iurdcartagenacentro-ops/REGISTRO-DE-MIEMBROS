@@ -52,7 +52,7 @@ const Dashboard: React.FC<DashboardProps> = ({ members }) => {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <StatCard title="Total Registrados" value={stats.total} icon={ICONS.Users} accentColor="#b91c1c" />
+        <StatCard title="Total Registrados" value={stats.total} icon={ICONS.Users} accentColor="#2b507d" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -116,8 +116,8 @@ const Dashboard: React.FC<DashboardProps> = ({ members }) => {
 };
 
 const StatCard: React.FC<{ title: string; value: number; icon: React.ReactNode; accentColor: string }> = ({ title, value, icon, accentColor }) => (
-  <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex items-center gap-5 transition-all hover:border-red-200 hover:shadow-lg group">
-    <div className="p-4 rounded-2xl border border-slate-200 bg-gray-50 flex items-center justify-center group-hover:bg-red-50 group-hover:border-red-100 transition-all" style={{ color: accentColor }}>
+  <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex items-center gap-5 transition-all hover:border-blue-200 hover:shadow-lg group">
+    <div className="p-4 rounded-2xl border border-slate-200 bg-gray-50 flex items-center justify-center group-hover:bg-blue-50 group-hover:border-blue-100 transition-all" style={{ color: accentColor }}>
       {icon}
     </div>
     <div>

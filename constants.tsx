@@ -41,10 +41,10 @@ export const ICONS = {
 };
 
 export const COLORS = {
-  primary: '#2563eb',
+  primary: '#2b507d', // Azul institucional
   secondary: '#64748b',
   success: '#22c55e',
   warning: '#f59e0b',
   danger: '#ef4444',
-  accent: '#8b5cf6'
+  accent: '#3b82f6'
 };

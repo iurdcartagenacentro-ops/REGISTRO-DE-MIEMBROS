@@ -1,9 +1,6 @@
 
 import { Member } from '../types';
 
-// Logo oficial: Corazón Rojo con Paloma Blanca
-const LOGO_URL = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cGF0aCBmaWxsPSIjOTkxYjFiIiBkPSJNMjU2IDQ2NEMyNDAgNDY0IDM3LjYgMzAyLjQgMzcuNiAxNjNDMzcuNiA4Ni40IDk3LjYgMzIgMTY4IDMyQzIxMi44IDMyIDI0Mi40IDU0LjQgMjU2IDc2LjRDIDI2OS42IDU0LjQgMjk5LjIgMzIgMzQ0IDMyQzQxNC40IDMyIDQ3NC40IDg2LjQgNDc0LjQgMTYzQzQ3NC40IDMwMi40IDI3MiA0NjQgMjU2IDQ2NFoiLz4KICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDI0IDE1N0MzOTIgMTY1IDMzNiAxOTcgMjk2IDIyN0MyNjQgMjUxIDI1NiAyNjcgMjU2IDI2N0MyNTYgMjY3IDI0OCAyNTEgMjE2IDIyN0MxNzYgMTk3IDEyMCAxNjUgODggMTU3QzEyOCAxOTcgMTYwIDIzNyAxNjAgMjM3QzE2MCAyMzcgMTI4IDI2MSAxMzYgMjc3QzE0NCAyOTMgMTg0IDMwOSAyMDggMzI1QzIzMiAzNDkgMjU2IDM4OSAyNTYgMzg5QzI1NiAzODkgMjgwIDM0OSAzMDQgMzI1QzMyOCAzMDkgMzY4IDI5MyAzNzYgMjc3QzM4NCAyNjEgMzUyIDIzNyAzNTIgMjM3QzM1MiAyMzcgMzg0IDE5NyA0MjQgMTU3WiIvPgo8L3N2Zz4=';
-
 export const exportService = {
   downloadMemberAsJPG: async (member: Member) => {
     const canvas = document.createElement('canvas');
@@ -18,7 +15,7 @@ export const exportService = {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Cabecera Institucional
-    ctx.fillStyle = '#991b1b';
+    ctx.fillStyle = '#2b507d';
     ctx.fillRect(0, 0, canvas.width, 300);
 
     const loadImg = (url: string): Promise<HTMLImageElement> => {
@@ -34,19 +31,12 @@ export const exportService = {
     };
 
     try {
-      // 1. Logo Universal
-      try {
-        const logo = await loadImg(LOGO_URL);
-        ctx.drawImage(logo, 80, 75, 150, 150);
-      } catch (e) {
-        console.warn("Logo no disponible");
-      }
-
+      // Branding de texto en el exportable
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 85px Inter, Arial, sans-serif';
-      ctx.fillText('UNIVERSAL', 270, 160);
+      ctx.fillText('UNIVERSAL', 80, 160);
       ctx.font = '30px Inter, Arial, sans-serif';
-      ctx.fillText('SISTEMA DE GESTIÓN DE MIEMBROS', 275, 210);
+      ctx.fillText('SISTEMA DE GESTIÓN DE MIEMBROS', 85, 210);
 
       // 2. Foto de Perfil
       ctx.strokeStyle = '#f1f5f9';
@@ -111,7 +101,7 @@ export const exportService = {
       }
 
       // Pie de Página
-      ctx.fillStyle = '#991b1b';
+      ctx.fillStyle = '#2b507d';
       ctx.fillRect(0, 1720, canvas.width, 34);
       ctx.font = '16px Inter, sans-serif';
       ctx.fillStyle = '#94a3b8';
